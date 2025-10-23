@@ -60,7 +60,7 @@ func TestCafeCount(t *testing.T) {
 		{0, 0},
 		{1, 1},
 		{2, 2},
-		{100, len(cafeList["moscow"])},
+		{100, min(len(cafeList["moscow"]))},
 	}
 	for _, v := range requests {
 		handler := http.HandlerFunc(mainHandle)
@@ -82,6 +82,7 @@ func TestCafeCount(t *testing.T) {
 		require.Equal(t, http.StatusOK, response.Code)
 
 		//Получение ответа
+		assert.Equal(t, http.StatusOK, response.Code)
 		res := response.Body.String()
 
 		//Проверка на пустую строку и запись ответа в слайс
@@ -91,9 +92,7 @@ func TestCafeCount(t *testing.T) {
 		}
 
 		//Сравнение результата
-		if len(cafes) != v.want {
-			t.Errorf("Неверное количество кафе: получено %v, требуется %v", len(cafes), v.want)
-		}
+		assert.Len(t, len(cafes), v.want)
 	}
 }
 
@@ -121,6 +120,7 @@ func TestCafeSearch(t *testing.T) {
 		handler.ServeHTTP(response, req)
 
 		//Получение ответа
+		assert.Equal(t, http.StatusOK, response.Code)
 		res := response.Body.String()
 
 		//Проверка на пустую строку и запись ответа в слайс
@@ -130,17 +130,13 @@ func TestCafeSearch(t *testing.T) {
 		}
 
 		//Проверка количества найденных кафе
-		if len(cafes) != v.wantCount {
-			t.Errorf("Найдено неверное количество: получил %v хочу %v", len(cafes), v.wantCount)
-		}
+		assert.Len(t, len(cafes), v.wantCount)
 
 		//Проверка содержания заданных символов
 		searchLower := strings.ToLower(v.search)
 		for _, cafe := range cafes {
 			cafeLower := strings.ToLower(cafe)
-			if !strings.Contains(cafeLower, searchLower) {
-				t.Errorf("Кафе '%s' не содержит '%s'", cafe, v.search)
-			}
+			assert.Contains(t, cafeLower, searchLower)
 		}
 	}
 }
