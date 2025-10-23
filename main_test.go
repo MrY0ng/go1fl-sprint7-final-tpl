@@ -92,7 +92,7 @@ func TestCafeCount(t *testing.T) {
 		}
 
 		//Сравнение результата
-		assert.Len(t, len(cafes), v.want)
+		assert.Len(t, cafes, v.want)
 	}
 }
 
@@ -130,7 +130,7 @@ func TestCafeSearch(t *testing.T) {
 		}
 
 		//Проверка количества найденных кафе
-		assert.Len(t, len(cafes), v.wantCount)
+		assert.Len(t, cafes, v.wantCount)
 
 		//Проверка содержания заданных символов
 		searchLower := strings.ToLower(v.search)
